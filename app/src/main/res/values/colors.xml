@@ -7,4 +7,12 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!--Simon colors-->
+    <color name="simon_green">#3edd4b</color>
+    <color name="simon_red">#dd4b3e</color>
+    <color name="simon_blue">#4b3edd</color>
+    <color name="simon_yellow">#ffea37</color>
+
+
 </resources>
