@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.core.content.ContextCompat.getColor
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import java.util.*
@@ -23,12 +22,12 @@ class GameFragment : Fragment() {
     /**
      * An array-list containing all the buttons used in the current pattern
      */
-    private lateinit var gamePattern: ArrayList<SimonGameButton>
+    private var gamePattern: ArrayList<SimonGameButton> = arrayListOf()
 
     /**
      * A queue containing a copy of the current pattern
      */
-    private lateinit var gamePatternCopy: LinkedList<SimonGameButton>
+    private var gamePatternCopy: LinkedList<SimonGameButton> = LinkedList<SimonGameButton>()
 
     /**
      * Keeps track of the current game's score, is 0 at start of game
@@ -42,14 +41,13 @@ class GameFragment : Fragment() {
                               savedInstanceState: Bundle?): View {
         // setup view-binding for this fragment
         _binding = FragmentGameBinding.inflate(inflater, container, false)
-        val view = binding.root
 
         // setup the "Scores" button's onclick to take you to the Scores Fragment
         binding.btnScoresGameFragment.setOnClickListener {
-            view.findNavController().navigate(R.id.action_gameFragment_to_scoresFragment)
+            binding.root.findNavController().navigate(R.id.action_gameFragment_to_scoresFragment)
         }
 
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,28 +55,18 @@ class GameFragment : Fragment() {
 
         // setup the "Simon" game buttons array
         simonButtons = arrayOf(
-            SimonGameButton(binding.btnGreen, getColor(requireContext(), R.color.simon_green)),
-            SimonGameButton(binding.btnRed, getColor(requireContext(), R.color.simon_red)),
-            SimonGameButton(binding.btnYellow, getColor(requireContext(), R.color.simon_yellow)),
-            SimonGameButton(binding.btnBlue, getColor(requireContext(), R.color.simon_blue)),
+            SimonGameButton(binding.btnGreen, requireContext().getColor(R.color.simon_green)),
+            SimonGameButton(binding.btnRed, requireContext().getColor(R.color.simon_red)),
+            SimonGameButton(binding.btnYellow, requireContext().getColor(R.color.simon_yellow)),
+            SimonGameButton(binding.btnBlue, requireContext().getColor(R.color.simon_blue)),
         )
 
-        // run through the "Simon" game buttons array
-        for(currSimonButton:SimonGameButton in simonButtons) {
-            // setup the current button's onclick event
+        // setup the onclick event for all four "Simon" game buttons
+        for(currSimonButton in simonButtons) {
             setupSimonButtonOnClick(currSimonButton.getButton())
         }
 
-        // setup the game pattern ArrayList
-        gamePattern = arrayListOf()
-
-        // setup the game pattern copy Queue
-        gamePatternCopy = LinkedList<SimonGameButton>()
-
-        // begin the game after a .5 second delay
-        Timer().schedule(500L) {
-            startGame()
-        }
+        startGame()
     }
 
     /**
@@ -89,7 +77,7 @@ class GameFragment : Fragment() {
      * @param currButton The "Simon" game button being setup
      */
     private fun setupSimonButtonOnClick(currButton:Button) {
-        currButton.setOnClickListener() {
+        currButton.setOnClickListener {
             // get the next color in the pattern from the gamePatternCopy queue
             val nextColor = gamePatternCopy.peek()
 
@@ -167,9 +155,7 @@ class GameFragment : Fragment() {
         currGameScore = newGameScore
 
         // get the "Game Text" textview, and display the current score
-        activity?.runOnUiThread {
-            binding.txtGameText.text = getString(R.string.current_score, currGameScore)
-        }
+        binding.txtGameText.text = getString(R.string.current_score, currGameScore)
     }
 
     /**
@@ -206,10 +192,13 @@ class GameFragment : Fragment() {
      * Runs through the gamePattern ArrayList and displays the current round's pattern to the user
      */
     private fun displayGamePattern() {
+        // setup Timer
+        val timer = Timer()
+
         // run through the gamePattern ArrayList
         for ((index, currBtn) in gamePattern.withIndex()) {
-            // display the current color in the pattern, with a 2s delay between each color
-            Timer().schedule((index + 1) * 2000L) {
+            // display the current color in the pattern, with a 1.5s delay between each color
+            timer.schedule((index + 1) * 1500L) {
                 displayNextColor(currBtn)
             }
         }
@@ -222,7 +211,8 @@ class GameFragment : Fragment() {
      */
     private fun displayNextColor(nextColorInPattern:SimonGameButton) {
         // get the "Simon" game button on the view corresponding to the current button in the pattern
-        val currBtnOnView:Button = binding.root.findViewById(nextColorInPattern.getButton().id)
+        val btnNextColorID:Int = nextColorInPattern.getButton().id
+        val currBtnOnView:Button = binding.root.findViewById(btnNextColorID)
 
         // change that button's color to black to signify it's position in the pattern
         currBtnOnView.setBackgroundColor(Color.BLACK)
