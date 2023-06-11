@@ -126,6 +126,9 @@ class GameFragment : Fragment() {
      * while attempting to recreate the game pattern
      */
     private fun endGame() {
+        // disable all "Simon" game buttons
+        setSimonButtonsEnabledState(false)
+
         // reset the game pattern
         gamePattern.clear()
 
@@ -172,10 +175,8 @@ class GameFragment : Fragment() {
      * index in the simonButtons array
      */
     private fun generateNextColor():SimonGameButton {
-        // setup Random
-        val rand = Random()
-
         // generate a random number between 0 and 3
+        val rand = Random() // setup Random
         val index = rand.nextInt(4)
 
         // return the "Simon" game button at that index in the simonButtons array
@@ -200,15 +201,26 @@ class GameFragment : Fragment() {
      * Runs through the gamePattern ArrayList and displays the current round's pattern to the user
      */
     private fun displayGamePattern() {
-        // setup Timer
-        val timer = Timer()
+        // disable all "Simon" game buttons before the pattern is displayed
+        setSimonButtonsEnabledState(false)
 
         // run through the gamePattern ArrayList
+        val timer = Timer() // setup timer
         for ((index, currBtn) in gamePattern.withIndex()) {
-            // display the current color in the pattern, with a 1.5s delay between each color
-            timer.schedule((index + 1) * 1500L) {
+            // display the next color every 1.5s
+            binding.root.postDelayed({
                 displayNextColor(currBtn)
-            }
+
+                // if the last color in the pattern was just displayed
+                if (index == gamePattern.size - 1) {
+                    // enable all Simon buttons after a 1.45s delay
+                    timer.schedule(1450L) {
+                        activity?.runOnUiThread {
+                            setSimonButtonsEnabledState(true)
+                        }
+                    }
+                }
+            }, (index + 1) * 1500L)
         }
     }
 
@@ -229,6 +241,17 @@ class GameFragment : Fragment() {
         Timer().schedule(1000L) {
             // reset it's color back to the original
             currBtnOnView.setBackgroundColor(nextColorInPattern.getColor())
+        }
+    }
+
+    /**
+     * Runs through the simonButtons array and enables or disables all the buttons,
+     * depending on the given boolean
+     * @param enabled A boolean determining if all simonButtons will be enabled or disabled
+     */
+    private fun setSimonButtonsEnabledState(enabled: Boolean) {
+        for (currButton in simonButtons) {
+            currButton.getButton().isEnabled = enabled
         }
     }
 }
