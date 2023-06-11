@@ -66,6 +66,11 @@ class GameFragment : Fragment() {
             SimonGameButton(binding.btnBlue, getColor(requireContext(), R.color.simon_blue)),
         )
 
+        // setup the onclick event for all four "game" buttons
+        for(currSimonButton:SimonGameButton in gameButtons) {
+            setupGameButtonOnClick(currSimonButton.getButton());
+        }
+
         // setup the game pattern ArrayList
         gamePattern = arrayListOf()
 
@@ -75,6 +80,38 @@ class GameFragment : Fragment() {
         // begin the game after a .5 second delay
         Timer().schedule(500L) {
             startGame()
+        }
+    }
+
+    private fun setupGameButtonOnClick(currButton:Button) {
+        currButton.setOnClickListener() {
+            // if the copy queue is not empty
+            if(!gamePatternCopy.isEmpty()) {
+                // get the next button in the pattern from the copy queue
+                val nextColor = gamePatternCopy.peek()
+
+                // if the current button is the same as the next button in the pattern
+                if(currButton.id == nextColor.getButton().id) {
+                    // remove that button from the pattern
+                    gamePatternCopy.remove()
+
+                    // if the game copy queue is now empty, start the next round
+                    if(gamePatternCopy.isEmpty()) {
+                        startNextTurn()
+                    }
+                }
+
+                // if the buttons id's do not match, the user input the patten incorrectly
+                else {
+                    endGame()
+                }
+            }
+
+            // if the copy queue is empty, the user input the pattern correctly
+            else {
+                startNextTurn()
+            }
+
         }
     }
 
@@ -88,6 +125,14 @@ class GameFragment : Fragment() {
 
         // start the game by generating the first color
         startNextTurn()
+    }
+
+    private fun endGame() {
+        // display the game over message
+        binding.txtGameText.text = "You lost the game after " + gameScore + " rounds";
+
+        // enable the "play again" button
+        binding.btnPlayAgain.isEnabled = true
     }
 
     /**
@@ -131,6 +176,9 @@ class GameFragment : Fragment() {
      * Copies over all the contents of the "Game Pattern" ArrayList to the copy Queue
      */
     private fun copyPatternToQueue() {
+        // clear the copy queue
+        gamePatternCopy.clear()
+
         // run through the pattern ArrayList
         for(currBtn:SimonGameButton in gamePattern) {
             // add the current button to the copy queue
