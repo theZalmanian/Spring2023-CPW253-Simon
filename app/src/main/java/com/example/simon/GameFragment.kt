@@ -52,6 +52,11 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // setup the onclick event for the "Play Again" button
+        binding.btnPlayAgain.setOnClickListener {
+            startGame()
+        }
+
         // setup the "Simon" game buttons array
         simonButtons = arrayOf(
             SimonGameButton(binding.btnGreen, requireContext().getColor(R.color.simon_green)),
@@ -63,11 +68,6 @@ class GameFragment : Fragment() {
         // setup the onclick event for all four "Simon" game buttons
         for(currSimonButton in simonButtons) {
             setupSimonButtonOnClick(currSimonButton.getButton())
-        }
-
-        // setup the onclick event for the "Play Again" button
-        binding.btnPlayAgain.setOnClickListener {
-            startGame()
         }
 
         startGame()
