@@ -110,8 +110,9 @@ class GameFragment : Fragment() {
      * or the "Play Again" button is clicked
      */
     private fun startGame() {
-        // disable the "Play Again" button
+        // disable the "Play Again" and "Scores" buttons
         binding.btnPlayAgain.isEnabled = false
+        binding.btnScoresGameFragment.isEnabled = false
 
         // reset the game score to 0 and display it to the user
         setAndDisplayScore(0)
@@ -134,8 +135,9 @@ class GameFragment : Fragment() {
         // display the game over message in the gameText textView
         binding.txtGameText.text = getString(R.string.game_over_message, currGameScore)
 
-        // enable the "Play Again" button
+        // enable the "Play Again" and "Scores" buttons
         binding.btnPlayAgain.isEnabled = true
+        binding.btnScoresGameFragment.isEnabled = true
     }
 
     /**
