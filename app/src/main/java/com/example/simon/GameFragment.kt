@@ -66,6 +66,11 @@ class GameFragment : Fragment() {
             setupSimonButtonOnClick(currSimonButton.getButton())
         }
 
+        // setup the onclick event for the "Play Again" button
+        binding.btnPlayAgain.setOnClickListener {
+            startGame()
+        }
+
         startGame()
     }
 
@@ -121,6 +126,9 @@ class GameFragment : Fragment() {
      * while attempting to recreate the game pattern
      */
     private fun endGame() {
+        // reset the game pattern
+        gamePattern.clear()
+
         // display the game over message in the gameText textView
         binding.txtGameText.text = getString(R.string.game_over_message, currGameScore)
 
