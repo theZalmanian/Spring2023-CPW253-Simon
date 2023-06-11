@@ -13,6 +13,7 @@ import androidx.navigation.findNavController
 import java.util.*
 import kotlin.concurrent.schedule
 import kotlin.collections.ArrayList
+import com.example.simon.databinding.FragmentGameBinding
 
 class GameFragment : Fragment() {
     /**
@@ -31,31 +32,25 @@ class GameFragment : Fragment() {
     private lateinit var gamePatternCopy: LinkedList<SimonGameButton>
 
     /**
-     * Keeps track of the current view
-     */
-    private lateinit var currView:View
-
-    /**
      * Keeps track of the current game's score, is 0 at start of game
      */
     private var gameScore: Int = 0
 
+    // setup view-binding for this fragment
+    private var _binding: FragmentGameBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_game, container, false)
-
-        // grab the "Scores" button on the Game Fragment
-        val btnScores = view.findViewById<Button>(R.id.btnScoresGameFragment)
+        // setup view-binding for this fragment
+        _binding = FragmentGameBinding.inflate(inflater, container, false)
+        val view = binding.root
 
         // setup it's onclick to take you to the Scores Fragment
-        btnScores.setOnClickListener {
+        binding.btnScoresGameFragment.setOnClickListener {
             view.findNavController()
                 .navigate(R.id.action_gameFragment_to_scoresFragment)
         }
-
-        // setup the current view
-        currView = view
 
         return view
     }
@@ -65,14 +60,10 @@ class GameFragment : Fragment() {
 
         // setup the "game" buttons array
         gameButtons = arrayOf(
-            SimonGameButton(view.findViewById(R.id.btnGreen),
-                            getColor(requireContext(), R.color.simon_green)),
-            SimonGameButton(view.findViewById(R.id.btnRed),
-                            getColor(requireContext(), R.color.simon_red)),
-            SimonGameButton(view.findViewById(R.id.btnYellow),
-                            getColor(requireContext(), R.color.simon_yellow)),
-            SimonGameButton(view.findViewById(R.id.btnBlue),
-                            getColor(requireContext(), R.color.simon_blue)),
+            SimonGameButton(binding.btnGreen, getColor(requireContext(), R.color.simon_green)),
+            SimonGameButton(binding.btnRed, getColor(requireContext(), R.color.simon_red)),
+            SimonGameButton(binding.btnYellow, getColor(requireContext(), R.color.simon_yellow)),
+            SimonGameButton(binding.btnBlue, getColor(requireContext(), R.color.simon_blue)),
         )
 
         // setup the game pattern ArrayList
@@ -81,8 +72,8 @@ class GameFragment : Fragment() {
         // setup the game pattern copy Queue
         gamePatternCopy = LinkedList<SimonGameButton>()
 
-        // begin the game after a 1 second delay
-        Timer().schedule(1000) {
+        // begin the game after a .5 second delay
+        Timer().schedule(500L) {
             startGame()
         }
     }
@@ -92,7 +83,10 @@ class GameFragment : Fragment() {
      * or the "Play Again" button is clicked
      */
     private fun startGame() {
-        startNextTurn()
+        // reset the game score to 0
+        gameScore = 0
+
+        // start the game by generating the first color
         startNextTurn()
     }
 
@@ -101,6 +95,9 @@ class GameFragment : Fragment() {
      * and then displaying the new pattern to the user
      */
     private fun startNextTurn() {
+        // a new round has begun
+        gameScore++
+
         // generate the next color and add it to the pattern
         generateNextColor()
 
@@ -114,7 +111,7 @@ class GameFragment : Fragment() {
     /**
      * When called generates a random num between 0 and 3,
      * and then sets the button at that index in the "game buttons" array list
-     * as the next button/color in the pattern
+     * as the next button (color) in the pattern
      */
     private fun generateNextColor() {
         // setup Random
@@ -157,11 +154,11 @@ class GameFragment : Fragment() {
 
     /**
      * Displays the current color to the user by changing that button's color to black,
-     * and then resetting it back to norma;
+     * and then resetting it back to normal
      */
     private fun displayCurrColor(currBtnInPattern:SimonGameButton) {
         // get the "Game" button on the view corresponding to the current button in the pattern
-        val btnOnView: Button = currView.findViewById(currBtnInPattern.getButton().id)
+        val btnOnView: Button = binding.root.findViewById(currBtnInPattern.getButton().id)
 
         // set the button's color to black to signify it's position in the pattern
         btnOnView.setBackgroundColor(Color.BLACK)
