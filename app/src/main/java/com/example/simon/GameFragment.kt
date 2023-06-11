@@ -93,6 +93,7 @@ class GameFragment : Fragment() {
      */
     private fun startGame() {
         startNextTurn()
+        startNextTurn()
     }
 
     /**
@@ -146,9 +147,11 @@ class GameFragment : Fragment() {
      */
     private fun displayPattern() {
         // run through the pattern array
-        for (currBtn:SimonGameButton in gamePattern) {
-            // display the current color to the user
-            displayCurrColor(currBtn)
+        for ((index, currBtn) in gamePattern.withIndex()) {
+            // Display the current color to the user with a 2s delay
+            Timer().schedule((index + 1) * 2000L) {
+                displayCurrColor(currBtn)
+            }
         }
     }
 
@@ -164,7 +167,7 @@ class GameFragment : Fragment() {
         btnOnView.setBackgroundColor(Color.BLACK)
 
         // after a 1 second delay
-        Timer().schedule(1000) {
+        Timer().schedule(1000L) {
             // reset it's color back to the original
             btnOnView.setBackgroundColor(currBtnInPattern.getColor())
         }
