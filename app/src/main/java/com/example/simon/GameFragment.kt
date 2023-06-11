@@ -1,6 +1,5 @@
 package com.example.simon
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -226,7 +225,7 @@ class GameFragment : Fragment() {
 
     /**
      * Displays the next color in the pattern to the user by changing the button's color
-     * to black for 1 second and then setting it back to normal
+     * to gray for 1 second and then setting it back to normal
      * @param nextColorInPattern The next colored button in the game pattern
      */
     private fun displayNextColor(nextColorInPattern:SimonGameButton) {
@@ -234,8 +233,8 @@ class GameFragment : Fragment() {
         val btnNextColorID:Int = nextColorInPattern.getButton().id
         val currBtnOnView:Button = binding.root.findViewById(btnNextColorID)
 
-        // change that button's color to black to signify it's position in the pattern
-        currBtnOnView.setBackgroundColor(Color.BLACK)
+        // change that button's color to gray to signify it's position in the pattern
+        currBtnOnView.setBackgroundColor(requireContext().getColor(R.color.simon_transition))
 
         // after a 1 second delay
         Timer().schedule(1000L) {
