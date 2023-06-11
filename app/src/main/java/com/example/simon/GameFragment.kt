@@ -203,29 +203,46 @@ class GameFragment : Fragment() {
         // disable all "Simon" game buttons before the pattern is displayed
         setSimonButtonsEnabledState(false)
 
+        // tell user to pay attention to pattern in the gameText textview
+        binding.txtGameText.setText(R.string.pay_attention)
+
         // run through the gamePattern ArrayList
-        val timer = Timer() // setup timer
-        for ((index, currBtn) in gamePattern.withIndex()) {
+        val delayInterval = 1500L
+        for ((index, currColor) in gamePattern.withIndex()) {
+            // calculate the display delay for the next color
+            val displayDelay = (index + 1) * delayInterval
+
             // display the next color every 1.5s
             binding.root.postDelayed({
-                displayNextColor(currBtn)
+                displayNextColor(currColor)
 
                 // if the last color in the pattern was just displayed
                 if (index == gamePattern.size - 1) {
-                    // enable all Simon buttons after a 1.45s delay
-                    timer.schedule(1450L) {
-                        activity?.runOnUiThread {
-                            setSimonButtonsEnabledState(true)
-                        }
-                    }
+                    // enable all Simon buttons .5s after the pattern stops displaying
+                    enableSimonButtonsAfterDelay()
                 }
-            }, (index + 1) * 1500L)
+            }, displayDelay)
         }
     }
 
     /**
-     * Displays the next color in the pattern to the user by changing the button's color
-     * to gray for 1 second and then setting it back to normal
+     * Enables all the "Simon" game buttons .5s after the pattern stops displaying
+     */
+    private fun enableSimonButtonsAfterDelay() {
+        // enable all Simon buttons after 1.45s
+        Timer().schedule(1450L) {
+            activity?.runOnUiThread {
+                setSimonButtonsEnabledState(true)
+
+                // display the current score in the gameText textview
+                setAndDisplayScore(currGameScore)
+            }
+        }
+    }
+
+    /**
+     * Displays the next color in the pattern to the user by changing the given button's color
+     * to gray for 1 second and then resetting it back to normal
      * @param nextColorInPattern The next colored button in the game pattern
      */
     private fun displayNextColor(nextColorInPattern:SimonGameButton) {
@@ -237,10 +254,10 @@ class GameFragment : Fragment() {
         currBtnOnView.setBackgroundColor(requireContext().getColor(R.color.simon_transition))
 
         // after a 1 second delay
-        Timer().schedule(1000L) {
-            // reset it's color back to the original
+        currBtnOnView.postDelayed({
+            // reset the button's color back to the original
             currBtnOnView.setBackgroundColor(nextColorInPattern.getColor())
-        }
+        }, 1000L)
     }
 
     /**
