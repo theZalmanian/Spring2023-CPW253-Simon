@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_200">#2196F3</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
@@ -9,9 +9,13 @@
     <color name="white">#FFFFFFFF</color>
 
     <!--Simon colors-->
-    <color name="simon_green">#3edd4b</color>
-    <color name="simon_red">#dd4b3e</color>
-    <color name="simon_blue">#4b3edd</color>
-    <color name="simon_yellow">#ffea37</color>
+    <color name="simon_green">#8AC926</color>
+    <color name="simon_red">#FF595E</color>
+    <color name="simon_blue">#1982C4</color>
+    <color name="simon_yellow">#FFCA3A</color>
     <color name="simon_transition">#aaaaaa</color>
+
+    <!--My app colors-->
+    <color name="moonstone">#53B3CB</color>
+    <color name="cerulean">#1A7187</color>
 </resources>
