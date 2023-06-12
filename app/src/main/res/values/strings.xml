@@ -3,8 +3,13 @@
     <string name="play_game">Play Game</string>
     <string name="play_again">Play Again</string>
     <string name="scores">Scores</string>
+
     <string name="highest_score">Highest Score: %d</string>
     <string name="current_score">Current Score: %d</string>
+
     <string name="pay_attention">Pay attention to the sequence</string>
-    <string name="game_over_message">"You lasted %d rounds!"</string>
+
+    <string name="game_count_display">Game #%d</string>
+    <string name="game_end_score_display">"You lasted %d rounds!"</string>
+    <string name="text_separator">" - "</string>
 </resources>

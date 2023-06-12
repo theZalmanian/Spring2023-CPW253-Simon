@@ -150,7 +150,7 @@ class GameFragment : Fragment() {
         gamePattern.clear()
 
         // display the game over message in the gameText textView
-        binding.txtGameText.text = getString(R.string.game_over_message, currGameScore)
+        binding.txtGameText.text = getString(R.string.game_end_score_display, currGameScore)
 
         // enable the "Play Again" and "Scores" buttons
         binding.btnPlayAgain.isEnabled = true
