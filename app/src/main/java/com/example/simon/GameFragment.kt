@@ -156,8 +156,9 @@ class GameFragment : Fragment() {
         binding.btnPlayAgain.isEnabled = true
         binding.btnScoresGameFragment.isEnabled = true
 
-        // add the game's data to the DB
-        viewModel.addSimonGame(Date.from(Instant.now()), currGameScore)
+        // get the current date and add the game's data to the DB
+        val currDate = Date.from(Instant.now())
+        viewModel.addSimonGame(currDate.toString(), currGameScore)
     }
 
     /**

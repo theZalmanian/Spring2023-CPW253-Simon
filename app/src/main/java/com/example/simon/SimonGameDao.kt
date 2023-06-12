@@ -8,8 +8,8 @@ import androidx.room.Query
 @Dao
 interface SimonGameDao {
     @Insert
-    suspend fun addGame(game:SimonGame)
+    suspend fun addGame(currGame:SimonGame)
 
-    @Query("SELECT * FROM SimonGame ORDER BY gameID DESC")
-    fun getAllGames(): LiveData<List<SimonGame>>
+//    @Query("SELECT * FROM SimonGame ORDER BY gameID DESC")
+//    fun getAllGames(): LiveData<List<SimonGame>>
 }
