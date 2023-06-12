@@ -3,9 +3,8 @@ package com.example.simon
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import java.util.Date
 
-class SimonGameViewModel(private val dao: SimonGameDao) : ViewModel() {
+class SimonGameVM(private val dao: SimonGameDao) : ViewModel() {
     /**
      * Adds the given "Simon" game data to the db
      * @param gameDate The date the game took place on

@@ -15,23 +15,20 @@
             android:id="@+id/txtGameId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@android:color/black" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/txtSeparator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/text_separator"
-            android:textSize="20sp"
-            android:textColor="@android:color/black" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/txtGameDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@android:color/black" />
+            android:textSize="20sp" />
 
     </LinearLayout>
 
@@ -40,7 +37,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20sp"
-        android:textColor="@android:color/black"
         android:gravity="center" />
 
 </LinearLayout>

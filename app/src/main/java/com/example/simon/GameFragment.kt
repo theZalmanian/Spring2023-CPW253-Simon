@@ -38,7 +38,7 @@ class GameFragment : Fragment() {
     /**
      * Keeps track of the SimonGame VM
      */
-    private lateinit var viewModel: SimonGameViewModel
+    private lateinit var viewModel: SimonGameVM
 
     private var _binding: FragmentGameBinding? = null
     private val binding get() = _binding!!
@@ -55,8 +55,8 @@ class GameFragment : Fragment() {
         val simonGameDao = SimonGameDatabase.getInstance(application).simonGameDao
 
         // get and set the SimonGameVM
-        val viewModelFactory = SimonGameViewModelFactory(simonGameDao)
-        viewModel = ViewModelProvider(this, viewModelFactory)[SimonGameViewModel::class.java]
+        val viewModelFactory = SimonGameVMFactory(simonGameDao)
+        viewModel = ViewModelProvider(this, viewModelFactory)[SimonGameVM::class.java]
 
         // setup the "Scores" button's onclick to take you to the Scores Fragment
         binding.btnScoresGameFragment.setOnClickListener {
