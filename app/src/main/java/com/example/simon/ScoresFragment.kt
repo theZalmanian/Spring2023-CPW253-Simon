@@ -21,8 +21,19 @@ class ScoresFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // get access to the SimonGameDao from the database instance
-        val simonGameDao = SimonGameDatabase.getInstance(requireContext()).simonGameDao
+        val simonGameDatabase = SimonGameDatabase.getInstance(requireContext())
+        val simonGameDao = simonGameDatabase.simonGameDao
+
+        // Retrieve the highest score
+        val highestScoreLiveData = simonGameDao.getHighestScore()
+
+        // Observe the LiveData for changes
+        highestScoreLiveData.observe(viewLifecycleOwner) { highestScore ->
+            highestScore?.let {
+                val formattedScore = getString(R.string.highest_score, highestScore.toInt())
+                binding.txtHighScoreDisplay.text = formattedScore
+            }
+        }
 
         // get the ListView used to display the data for each game
         val lstScoresDisplay: ListView = binding.lstScoresDisplay
