@@ -8,11 +8,11 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
-import java.util.*
 import kotlin.concurrent.schedule
 import kotlin.collections.ArrayList
+import java.util.*
 import com.example.simon.databinding.FragmentGameBinding
-import java.time.Instant
+import java.text.DateFormat
 
 class GameFragment : Fragment() {
     /**
@@ -156,9 +156,21 @@ class GameFragment : Fragment() {
         binding.btnPlayAgain.isEnabled = true
         binding.btnScoresGameFragment.isEnabled = true
 
-        // get the current date and add the game's data to the DB
-        val currDate = Date.from(Instant.now())
-        viewModel.addSimonGame(currDate.toString(), currGameScore)
+        saveGameDataToDB()
+    }
+
+    /**
+     * Adds the data of the game that just ended to the DB
+     */
+    private fun saveGameDataToDB() {
+        // setup date format
+        val dateFormat = DateFormat.getDateInstance()
+
+        // get the current date and format it accordingly
+        val formattedDate = dateFormat.format(Date())
+
+        // add the formatted date and game score to the DB
+        viewModel.addSimonGame(formattedDate.toString(), currGameScore)
     }
 
     /**
