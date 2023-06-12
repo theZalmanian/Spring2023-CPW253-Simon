@@ -6,7 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
+import androidx.lifecycle.lifecycleScope
 import com.example.simon.databinding.FragmentScoresBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ScoresFragment : Fragment() {
     private lateinit var binding: FragmentScoresBinding
@@ -21,17 +25,24 @@ class ScoresFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val simonGameDatabase = SimonGameDatabase.getInstance(requireContext())
-        val simonGameDao = simonGameDatabase.simonGameDao
+        // get access to the SimonGameDao from the database instance
+        val simonGameDao = SimonGameDatabase.getInstance(requireContext()).simonGameDao
 
-        // Retrieve the highest score
-        val highestScoreLiveData = simonGameDao.getHighestScore()
+        // get the highest score, and observe the DB for changes
+        simonGameDao.getHighestScore().observe(viewLifecycleOwner) { highestScore ->
+            highestScore.let {
+                // if the user has not played any games yet
+                if (highestScore == null) {
+                    // tell them to come back after they do
+                    binding.txtHighScoreDisplay.text = getString(R.string.come_back_later)
 
-        // Observe the LiveData for changes
-        highestScoreLiveData.observe(viewLifecycleOwner) { highestScore ->
-            highestScore?.let {
-                val formattedScore = getString(R.string.highest_score, highestScore.toInt())
-                binding.txtHighScoreDisplay.text = formattedScore
+                    // disable the "Clear Game History" button, as there is no history to clear
+                    binding.btnClearGameHistory.isEnabled = false
+                }
+                else {
+                    // display the highest recorded score on the view
+                    binding.txtHighScoreDisplay.text = getString(R.string.highest_score, highestScore)
+                }
             }
         }
 
@@ -42,6 +53,18 @@ class ScoresFragment : Fragment() {
         simonGameDao.getAllGames().observe(viewLifecycleOwner) { gameDataList ->
             // display them all on the "Scores Display" ListView
             lstScoresDisplay.adapter = ScoresAdapter(requireContext(), gameDataList)
+        }
+
+        // setup the onclick event for the "Clear Game History" button
+        binding.btnClearGameHistory.setOnClickListener {
+            lifecycleScope.launch {
+                withContext(Dispatchers.IO) {
+                    // when clicked, clear the SimonGame table of all entries,
+                    // and reset the gameID sequence back to 1
+                    simonGameDao.clearGamesTable()
+                    simonGameDao.resetSequence()
+                }
+            }
         }
     }
 }
