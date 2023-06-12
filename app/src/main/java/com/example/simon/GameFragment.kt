@@ -52,10 +52,10 @@ class GameFragment : Fragment() {
         val application = requireNotNull(this.activity).application
 
         // get access to the SimonGameDao from the database instance
-        val dao = SimonGameDatabase.getInstance(application).simonGameDao
+        val simonGameDao = SimonGameDatabase.getInstance(application).simonGameDao
 
         // get and set the SimonGameVM
-        val viewModelFactory = SimonGameViewModelFactory(dao)
+        val viewModelFactory = SimonGameViewModelFactory(simonGameDao)
         viewModel = ViewModelProvider(this, viewModelFactory)[SimonGameViewModel::class.java]
 
         // setup the "Scores" button's onclick to take you to the Scores Fragment
