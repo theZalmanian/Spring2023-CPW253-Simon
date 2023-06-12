@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import java.util.*
 import kotlin.concurrent.schedule
 import kotlin.collections.ArrayList
 import com.example.simon.databinding.FragmentGameBinding
+import java.time.Instant
 
 class GameFragment : Fragment() {
     /**
@@ -33,6 +35,11 @@ class GameFragment : Fragment() {
      */
     private var currGameScore: Int = 0
 
+    /**
+     * Keeps track of the SimonGame VM
+     */
+    private lateinit var viewModel: SimonGameViewModel
+
     private var _binding: FragmentGameBinding? = null
     private val binding get() = _binding!!
 
@@ -40,6 +47,16 @@ class GameFragment : Fragment() {
                               savedInstanceState: Bundle?): View {
         // setup view-binding for this fragment
         _binding = FragmentGameBinding.inflate(inflater, container, false)
+
+        // setup database
+        val application = requireNotNull(this.activity).application
+
+        // get access to the SimonGameDao from the database instance
+        val dao = SimonGameDatabase.getInstance(application).simonGameDao
+
+        // get and set the SimonGameVM
+        val viewModelFactory = SimonGameViewModelFactory(dao)
+        viewModel = ViewModelProvider(this, viewModelFactory)[SimonGameViewModel::class.java]
 
         // setup the "Scores" button's onclick to take you to the Scores Fragment
         binding.btnScoresGameFragment.setOnClickListener {
@@ -138,6 +155,9 @@ class GameFragment : Fragment() {
         // enable the "Play Again" and "Scores" buttons
         binding.btnPlayAgain.isEnabled = true
         binding.btnScoresGameFragment.isEnabled = true
+
+        // add the game's data to the DB
+        viewModel.addSimonGame(Date.from(Instant.now()), currGameScore)
     }
 
     /**
