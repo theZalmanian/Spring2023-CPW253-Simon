@@ -22,12 +22,14 @@ class ScoresAdapter(context: Context, gameDataList: List<SimonGame>)
         val gameItem = getItem(position)
 
         // Get the TextViews for the game data in the item_score layout
+        val txtGameId = itemView?.findViewById<TextView>(R.id.txtGameId)
         val txtGameDate = itemView?.findViewById<TextView>(R.id.txtGameDate)
         val txtGameScore = itemView?.findViewById<TextView>(R.id.txtGameScore)
 
         // Set the text values for the TextViews
+        txtGameId?.text = context.getString(R.string.game_count_display, gameItem?.gameID)
         txtGameDate?.text = gameItem?.gameDate
-        txtGameScore?.text = gameItem?.gameScore.toString()
+        txtGameScore?.text = context.getString(R.string.game_end_score_display, gameItem?.gameScore)
 
         // return the modified view, now containing game data
         return itemView!!
