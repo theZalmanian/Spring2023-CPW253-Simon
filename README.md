@@ -1,6 +1,8 @@
 # Simon
-The Simon game is a classic memory game where a player is shown and then needs to repeat a 
-sequence of colors in the correct order. This app implements that game in Kotlin through Android Studio.
+The Simon game is a classic memory game where a player is shown a sequence of colors, 
+and then needs to repeat the sequence correctly to move on to the next round.
+
+This app implements that game in Kotlin through Android Studio.
 
 ## Project Features
 The Android features I implemented for this project are:
